@@ -10,7 +10,7 @@ $ docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' c
 It can also be run from a docker image. Either build on your own from the included Dockerfile or run from DockerHub
 
 ```
-docker run -it --name clai -e OPENAI_API_KEY=$OPENAI_API_KEY -v "/var/run/docker.sock:/var/run/docker.sock" clai "How do i get IP of a docker container"
+docker run -it --rm --name clai -e OPENAI_API_KEY=$OPENAI_API_KEY -v "/var/run/docker.sock:/var/run/docker.sock" shantanugoel/clai "How do i get IP of a docker container"
 Gets the IP address of a running Docker container.
 $ docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name
 ```
