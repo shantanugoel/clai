@@ -53,6 +53,7 @@ async fn main() -> Result<()> {
     let prompt = env::args().collect::<Vec<_>>().join(" ");
     let request = CreateChatCompletionRequestArgs::default()
         .model(model)
+        .temperature(0.5)
         .messages([
             ChatCompletionRequestSystemMessageArgs::default()
                 .content(get_system_prompt().await)
