@@ -22,7 +22,6 @@ async fn get_system_prompt() -> String {
     } else {
         format!("OS: {}, Arch: {}", env::consts::OS, env::consts::ARCH,)
     };
-    println!("{}", system_info);
     format!("
     You are clai, a command line code snippet generator. 
     Given the user's desired outcome, respond with a helpful command line code or command to gnerate the desired outcome.
@@ -43,14 +42,17 @@ async fn get_system_prompt() -> String {
 #[tokio::main]
 async fn main() -> Result<()> {
     let api_key = env::var("OPENAI_API_KEY")?;
+    let api_base =
+        env::var("OPENAI_API_BASE").unwrap_or("https://api.groq.com/openai/v1".to_string());
+    let model = env::var("OPENAI_MODEL").unwrap_or("llama3-70b-8192".to_string());
     let config = OpenAIConfig::new()
-        .with_api_base("https://api.groq.com/openai/v1")
+        .with_api_base(api_base)
         .with_api_key(api_key);
     let client = Client::with_config(config);
 
     let prompt = env::args().collect::<Vec<_>>().join(" ");
     let request = CreateChatCompletionRequestArgs::default()
-        .model("llama3-70b-8192")
+        .model(model)
         .messages([
             ChatCompletionRequestSystemMessageArgs::default()
                 .content(get_system_prompt().await)
