@@ -1,4 +1,4 @@
-A simple command line app to get help on commands to run for any task that you need to carry out. Defaults to using Groq llama 3 70B model to generate the output.
+A simple command line app to get AI generated on commands to run for any task that you need to carry out. Defaults to using Groq llama 3 70B model to generate the output.
 
 E.g.
 ```
