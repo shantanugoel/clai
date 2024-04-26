@@ -8,4 +8,5 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.82"
 async-openai = "0.20.0"
+bollard = "0.16.1"
 tokio = { version = "1.37.0", features = ["full"] }

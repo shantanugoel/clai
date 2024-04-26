@@ -7,10 +7,22 @@ use async_openai::{
     },
     Client,
 };
+use bollard::Docker;
 use std::env;
 
-fn get_system_prompt() -> String {
-    let system_info = format!("OS: {}, Arch: {}", env::consts::OS, env::consts::ARCH,);
+async fn get_system_prompt() -> String {
+    let system_info: String = if let Ok(docker) = Docker::connect_with_local_defaults() {
+        let info = docker.info().await.unwrap();
+        let mut os = info.operating_system.unwrap();
+        // Docker on windows often reports "Docker Desktop as the os"
+        if os.to_lowercase().contains("desktop") {
+            os = "windows".to_string();
+        }
+        format!("OS: {}, Arch: {}", os, info.architecture.unwrap())
+    } else {
+        format!("OS: {}, Arch: {}", env::consts::OS, env::consts::ARCH,)
+    };
+    println!("{}", system_info);
     format!("
     You are clai, a command line code snippet generator. 
     Given the user's desired outcome, respond with a helpful command line code or command to gnerate the desired outcome.
@@ -41,7 +53,7 @@ async fn main() -> Result<()> {
         .model("llama3-70b-8192")
         .messages([
             ChatCompletionRequestSystemMessageArgs::default()
-                .content(get_system_prompt())
+                .content(get_system_prompt().await)
                 .build()?
                 .into(),
             ChatCompletionRequestUserMessageArgs::default()
